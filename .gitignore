@@ -39,6 +39,9 @@ Thumbs.db
 # Docker
 *.pid
 
+# Docker compose
+docker-compose.override.yml
+
 # Logs
 *.log
 
@@ -50,8 +53,22 @@ token.json
 *.swp
 *.swo
 
+# Temporary files
+*.tmp
+*.bak.*
+
 # Ignore coverage and test output
 htmlcov/
 .coverage
 .tox/
 .pytest_cache/
+
+# Visual Studio Code
+.settings/
+jsconfig.json
+tsconfig.json
+
+# Testing
+.coverage.*
+*.cover
+.hypothesis/
