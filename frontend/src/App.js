@@ -1,17 +1,13 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import About from './pages/About';
+import ApiTester from './components/ApiTester';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
-    </Router>
+    <div className="App">
+      {/* Keep your existing routes */}
+      <ApiTester /> {/* Add this line */}
+    </div>
   );
 }
 
+// Add this export statement
 export default App;
