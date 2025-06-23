@@ -1,0 +1,17 @@
+/* Animation for spinner */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #666;
+  font-size: 14px;
+}
+
+.bulk-actions select:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

@@ -1,7 +1,16 @@
-/* Import Bootstrap CSS */
+/**
+ * Consolidated Stylesheet
+ * Combines Bootstrap + Custom Styles
+ */
+
+/* Bootstrap Import */
 @import '~bootstrap/dist/css/bootstrap.min.css';
 
-/* Custom styles */
+/* Global SCSS Imports */
+@import './assets/styles/global';
+@import './assets/styles/components/home';
+
+/* Original App.css Content */
 .app {
   font-family: Arial, sans-serif;
 }

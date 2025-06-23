@@ -1,0 +1,206 @@
+/**
+ * Homepage Styles
+ * Sections: Hero -> Features -> Testimonials
+ * Mobile-first design with optimized breakpoints
+ */
+
+// 🌿 Color & Spacing Variables
+$color-primary: #2e7d32; // Agriculture green
+$color-secondary: #4caf50;
+$color-light: #f5f5f5;
+$color-dark: #1c1c1c;
+$spacing-unit: 1rem;
+$border-radius: 8px;
+
+// 🌟 Hero Section (Improved Layout & Responsiveness)
+.hero {
+  position: relative;
+  height: 65vh;
+  min-height: 450px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  padding: 0 $spacing-unit;
+
+  .hero-content {
+    max-width: 700px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+
+    h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: $spacing-unit;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    p {
+      font-size: 1.2rem;
+      opacity: 0.8;
+    }
+
+    .cta-button {
+      margin-top: 1rem;
+      padding: 12px 24px;
+      background: $color-secondary;
+      color: white;
+      border-radius: $border-radius;
+      font-size: 1rem;
+      text-transform: uppercase;
+      font-weight: bold;
+      transition: background 0.3s ease;
+
+      &:hover {
+        background: darken($color-secondary, 10%);
+      }
+    }
+  }
+}
+
+// 📌 Features Section (Grid Layout & Animation)
+.features {
+  padding: 4rem $spacing-unit;
+  background: $color-light;
+  text-align: center;
+
+  h2 {
+    color: $color-primary;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+// 🔹 Feature Card (Hover Animation)
+.feature-card {
+  background: white;
+  border-radius: $border-radius;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .feature-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: lighten($color-primary, 50%);
+    border-radius: 50%;
+    padding: 1rem;
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+
+  h3 {
+    color: $color-primary;
+    font-size: 1.4rem;
+  }
+
+  p {
+    color: #666;
+    line-height: 1.6;
+  }
+}
+
+// ✨ Testimonials Section (Enhanced Look)
+.testimonials {
+  padding: 4rem $spacing-unit;
+  background: $color-primary;
+  color: white;
+  text-align: center;
+
+  h2 {
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+// 📢 Testimonial Card (Updated Styling)
+.testimonial-card {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: $border-radius;
+  text-align: left;
+
+  .quote {
+    font-style: italic;
+    line-height: 1.6;
+    opacity: 0.9;
+    position: relative;
+  }
+
+  .author {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 1rem;
+      object-fit: cover;
+    }
+
+    strong {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+  }
+}
+
+// 📱 Responsive Breakpoints (Better Mobile Support)
+@media (min-width: 768px) {
+  .hero {
+    height: 75vh;
+
+    .hero-content {
+      h1 {
+        font-size: 3.5rem;
+      }
+
+      p {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  .features-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

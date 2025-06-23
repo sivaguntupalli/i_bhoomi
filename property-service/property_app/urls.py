@@ -3,8 +3,6 @@ from rest_framework.routers import DefaultRouter
 from .views import PropertyViewSet
 
 router = DefaultRouter()
-router.register(r'properties', PropertyViewSet, basename='property')
+router.register(r'properties', PropertyViewSet)
 
-urlpatterns = [
-    path('', include(router.urls)),
-]
+urlpatterns = router.urls  #  No extra path nesting!

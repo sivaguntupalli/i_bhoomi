@@ -7,7 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     # Property API
-    path('api/properties/', include('property_app.urls')),
+    path('api/', include('property_app.urls')),
     
     # API Documentation
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),

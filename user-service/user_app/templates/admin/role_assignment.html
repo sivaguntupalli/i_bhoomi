@@ -1,0 +1,42 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="module">
+    <h2>{% blocktrans count counter=users|length %}Assign role to 1 user{% plural %}Assign role to {{ counter }} users{% endblocktrans %}</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            <thead>
+                <tr>
+                    <th>{% trans "User" %}</th>
+                    <th>{% trans "Current Role" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.profile.get_role_display }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="form-row">
+            <label for="id_role">{% trans "New Role:" %}</label>
+            <select name="role" id="id_role" required>
+                {% for role in roles %}
+                <option value="{{ role.name }}">{{ role.display }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="submit-row">
+            <input type="submit" value="{% trans 'Save' %}" class="default" />
+            <a href="{% url 'admin:auth_user_changelist' %}" class="button">{% trans "Cancel" %}</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

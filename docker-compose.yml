@@ -1,29 +1,11 @@
 version: '3.8'
 
 services:
-  frontend:
-    build: ./frontend
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./frontend/build:/usr/share/nginx/html
-    depends_on:
-      - user-service
-      - property-service
-
+  # Implemented Services
   user-service:
     build: ./user-service
     ports:
-      - "8000:8000"
+      - "8000:8000"    # Primary user/auth service
     environment:
       - DEBUG=True
       - ALLOWED_HOSTS=localhost,user-service
@@ -31,7 +13,60 @@ services:
   property-service:
     build: ./property-service
     ports:
-      - "8001:8000"
+      - "8001:8000"    # Property listings
     environment:
       - DEBUG=True
       - ALLOWED_HOSTS=localhost,property-service
+
+  messaging-service:
+    build: ./messaging-service
+    ports:
+      - "8003:8000"    # Chat functionality
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - ALLOWED_HOSTS=localhost,messaging-service
+    depends_on:
+      - redis
+      - user-service   # For auth validation
+
+  # Infrastructure (Required for implemented services)
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"    # For messaging-service WebSockets
+    volumes:
+      - redis_data:/data
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"    # Dev server
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"        # Production access
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./frontend/build:/usr/share/nginx/html
+    depends_on:
+      - user-service
+      - property-service
+      - messaging-service
+
+# Reserved for future (uncomment when ready)
+#  search-service:
+#    build: ./search-service
+#    ports:
+#      - "8002:8000"    # Reserved port
+#
+#  recommendation-service:
+#    build: ./recommendation-service
+#    ports:
+#      - "8006:8000"    # Reserved port
+
+volumes:
+  redis_data:

@@ -71,4 +71,4 @@ tsconfig.json
 # Testing
 .coverage.*
 *.cover
-.hypothesis/
+.hypothesis/db.sqlite3

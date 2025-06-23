@@ -9,7 +9,7 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('http://localhost:8000/api/token/', {
+      const response = await axios.post('${process.env.REACT_APP_API_BASE_URL}/api/token/', {
         email,
         password
       });

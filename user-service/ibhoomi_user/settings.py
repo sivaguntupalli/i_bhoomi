@@ -1,16 +1,26 @@
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
 import os
 
-# Build paths
+# Load environment variables from .env file
+load_dotenv()
+
+# Base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Security
+# ------------------------------------------------------------------------------
+# 🔐 SECURITY SETTINGS
+# ------------------------------------------------------------------------------
+
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-development-key')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
-# Application definition
+# ------------------------------------------------------------------------------
+# 📦 INSTALLED APPS
+# ------------------------------------------------------------------------------
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -18,16 +28,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-    # Third-party
+
+    # Third-party packages
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_spectacular',
     'corsheaders',
-    
-    # Local
+
+    # Local app
     'user_app',
 ]
+
+# ------------------------------------------------------------------------------
+# 🔁 MIDDLEWARE
+# ------------------------------------------------------------------------------
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -39,6 +53,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# ------------------------------------------------------------------------------
+# 🌐 URLS AND TEMPLATES
+# ------------------------------------------------------------------------------
 
 ROOT_URLCONF = 'ibhoomi_user.urls'
 
@@ -60,15 +78,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ibhoomi_user.wsgi.application'
 
-# Database
+# ------------------------------------------------------------------------------
+# 🛢️ DATABASE CONFIG (via .env)
+# ------------------------------------------------------------------------------
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ['POSTGRES_DB'],
+        'USER': os.environ['POSTGRES_USER'],
+        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+        'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
+        'PORT': os.getenv('POSTGRES_PORT', '5432'),
     }
 }
 
-# REST Framework
+# ------------------------------------------------------------------------------
+# 🔐 JWT & AUTHENTICATION
+# ------------------------------------------------------------------------------
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -79,7 +107,6 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
-# JWT Configuration
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
@@ -93,7 +120,10 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM': 'user_id',
 }
 
-# API Documentation
+# ------------------------------------------------------------------------------
+# 📘 API DOCS (Swagger/OpenAPI)
+# ------------------------------------------------------------------------------
+
 SPECTACULAR_SETTINGS = {
     'TITLE': 'iBhoomi User API',
     'DESCRIPTION': 'User authentication and management service',
@@ -116,7 +146,10 @@ SPECTACULAR_SETTINGS = {
     },
 }
 
-# CORS & Security
+# ------------------------------------------------------------------------------
+# 🌐 CORS & CSRF
+# ------------------------------------------------------------------------------
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
@@ -124,7 +157,10 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS.copy()
 CORS_ALLOW_CREDENTIALS = True
 
-# Security headers (disabled in development)
+# ------------------------------------------------------------------------------
+# 🔒 Production Security Headers
+# ------------------------------------------------------------------------------
+
 if not DEBUG:
     SECURE_HSTS_SECONDS = 3600
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
@@ -133,9 +169,15 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
-# Static files
+# ------------------------------------------------------------------------------
+# 📁 STATIC FILES
+# ------------------------------------------------------------------------------
+
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Default primary key
+# ------------------------------------------------------------------------------
+# 🗝️ DEFAULT PK FIELD
+# ------------------------------------------------------------------------------
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

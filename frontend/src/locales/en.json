@@ -1,6 +1,11 @@
 {
-  "welcome": "Welcome",
-  "home": "Home",
-  "about": "About",
-  "contact": "Contact"
+  "home": {
+    "hero_title": "iBhoomi - Your Trusted Property Partner",
+    "hero_subtitle": "Transparent deals for land, plots & villas",
+    "features_title": "Key Benefits",
+    "feature1": "Fair Pricing",
+    "feature1_desc": "Market-aligned valuations",
+    "feature2": "Verified Listings",
+    "feature3": "Quick Processing"
+  }
 }
