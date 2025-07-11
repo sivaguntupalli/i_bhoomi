@@ -1,0 +1,10 @@
+// src/assets/styles/_index.scss
+@forward 'variables';
+@forward 'mixins';
+@forward 'base';
+
+// Only include components that DO NOT re-declare variables
+@forward 'components/auth';
+@forward 'components/header';
+@forward 'components/home';
+@forward 'components/user/UserBulkActions';

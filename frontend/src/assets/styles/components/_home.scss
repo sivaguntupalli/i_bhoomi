@@ -1,18 +1,12 @@
+// src/assets/styles/components/_home.scss
+@use '../variables' as *;
+
 /**
  * Homepage Styles
- * Sections: Hero -> Features -> Testimonials
+ * Sections: Hero → Features → Testimonials
  * Mobile-first design with optimized breakpoints
  */
 
-// 🌿 Color & Spacing Variables
-$color-primary: #2e7d32; // Agriculture green
-$color-secondary: #4caf50;
-$color-light: #f5f5f5;
-$color-dark: #1c1c1c;
-$spacing-unit: 1rem;
-$border-radius: 8px;
-
-// 🌟 Hero Section (Improved Layout & Responsiveness)
 .hero {
   position: relative;
   height: 65vh;
@@ -23,18 +17,17 @@ $border-radius: 8px;
   justify-content: center;
   text-align: center;
   color: white;
-  padding: 0 $spacing-unit;
+  padding: 0 $spacing-md;
 
   .hero-content {
     max-width: 700px;
-    text-align: center;
     position: relative;
     z-index: 1;
 
     h1 {
       font-size: 3rem;
       font-weight: bold;
-      margin-bottom: $spacing-unit;
+      margin-bottom: $spacing-md;
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
 
@@ -61,9 +54,9 @@ $border-radius: 8px;
   }
 }
 
-// 📌 Features Section (Grid Layout & Animation)
+// 📌 Features Section
 .features {
-  padding: 4rem $spacing-unit;
+  padding: 4rem $spacing-md;
   background: $color-light;
   text-align: center;
 
@@ -83,7 +76,7 @@ $border-radius: 8px;
   }
 }
 
-// 🔹 Feature Card (Hover Animation)
+// 🔹 Feature Card
 .feature-card {
   background: white;
   border-radius: $border-radius;
@@ -124,9 +117,9 @@ $border-radius: 8px;
   }
 }
 
-// ✨ Testimonials Section (Enhanced Look)
+// ✨ Testimonials Section
 .testimonials {
-  padding: 4rem $spacing-unit;
+  padding: 4rem $spacing-md;
   background: $color-primary;
   color: white;
   text-align: center;
@@ -146,7 +139,7 @@ $border-radius: 8px;
   }
 }
 
-// 📢 Testimonial Card (Updated Styling)
+// 📢 Testimonial Card
 .testimonial-card {
   background: rgba(255, 255, 255, 0.1);
   padding: 2rem;
@@ -180,7 +173,7 @@ $border-radius: 8px;
   }
 }
 
-// 📱 Responsive Breakpoints (Better Mobile Support)
+// 📱 Responsive
 @media (min-width: 768px) {
   .hero {
     height: 75vh;

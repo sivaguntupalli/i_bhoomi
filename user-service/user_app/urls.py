@@ -13,7 +13,7 @@ from .views import (
 
 # DRF Router for ViewSet
 router = DefaultRouter()
-router.register(r'users', UserViewSet, basename='user')
+router.register(r'', UserViewSet, basename='user')
 
 urlpatterns = [
     path('', include(router.urls)),  # /api/users/

@@ -1,6 +1,6 @@
 from .auth import TokenObtainPairView, TokenRefreshView
 from .users import UserViewSet, RegisterView, ProfileUpdateView
-from .roles import UpdateUserRoleView, UserBulkActionsAPIView  # ✅ correct source
+from .roles import UpdateUserRoleView, UserBulkActionsAPIView 
 
 __all__ = [
     'TokenObtainPairView',
@@ -8,6 +8,6 @@ __all__ = [
     'UserViewSet',
     'RegisterView',
     'ProfileUpdateView',
-    'UpdateUserRoleView',           # ✅ now correctly imported
+    'UpdateUserRoleView',          
     'UserBulkActionsAPIView'
 ]

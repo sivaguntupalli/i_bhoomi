@@ -1,10 +1,2 @@
 // src/assets/styles/global.scss
-@import 'variables';
-@import 'mixins';
-@import 'base';
-@import 'components/auth';
-@import 'components/header';
-@import 'components/home';
-
-// For user components (note the path and underscore)
-@import 'components/user/UserBulkActions'; 
+@use './index' as *;

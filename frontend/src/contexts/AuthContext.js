@@ -1,6 +1,6 @@
 // src/contexts/AuthContext.js
 import { createContext, useContext, useState } from 'react';
-import axios from 'axios';
+import userApi from '../../api/userApi';
 
 const AuthContext = createContext();
 
@@ -9,15 +9,17 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('${process.env.REACT_APP_API_BASE_URL}/api/token/', {
-        email,
-        password
-      });
-      setUser(response.data.user);
-      localStorage.setItem('access_token', response.data.access);
-      localStorage.setItem('refresh_token', response.data.refresh);
+      const response = await userApi.post('/token/', { email, password });
+      const { access, refresh, user: userData } = response.data;
+
+      setUser(userData);
+      localStorage.setItem('access_token', access);
+      localStorage.setItem('refresh_token', refresh);
+      localStorage.setItem('user', JSON.stringify(userData));
+
       return true;
     } catch (error) {
+      console.error('AuthContext login error:', error);
       return false;
     }
   };

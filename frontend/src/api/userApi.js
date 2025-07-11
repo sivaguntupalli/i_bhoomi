@@ -1,16 +1,15 @@
-// src/services/userAPI.js
-import axios from 'axios';
+// src/api/userApi.js
+import axiosInstance from './axiosConfig';
 
-export default {
-  bulkUserActions(userIds, action, value) {
-    return axios.patch('/api/users/bulk_actions/', {
+const userApi = {
+  bulkUserActions: async (userIds, action, value) => {
+    const response = await axiosInstance.patch('/users/bulk_actions/', {
       user_ids: userIds,
-      action,  // 'role' or 'status'
-      value    // role name or boolean
-    }, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-      }
+      action,
+      value,
     });
-  }
-}
+    return response.data;
+  },
+};
+
+export default userApi;
