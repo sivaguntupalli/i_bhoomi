@@ -1,13 +1,13 @@
-from .auth import TokenObtainPairView, TokenRefreshView
-from .users import UserViewSet, RegisterView, ProfileUpdateView
-from .roles import UpdateUserRoleView, UserBulkActionsAPIView 
+from .auth import TokenObtainPairView, TokenRefreshView, RegisterView
+from .users import UserViewSet, ProfileUpdateView
+from .roles import UpdateUserRoleView, UserBulkActionsAPIView  # ✅ Correct source
 
 __all__ = [
     'TokenObtainPairView',
     'TokenRefreshView',
-    'UserViewSet',
     'RegisterView',
+    'UserViewSet',
     'ProfileUpdateView',
-    'UpdateUserRoleView',          
+    'UpdateUserRoleView',
     'UserBulkActionsAPIView'
 ]

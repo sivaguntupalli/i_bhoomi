@@ -8,11 +8,12 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const data = await authService.login(credentials);
-      tokenService.setAuthData(data);
-      return data.user;
+      tokenService.setAuthData(data); // store tokens
+      // Optionally, decode token to get user info, or fetch user profile after login
+      return data; // return tokens, not data.user
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.detail || 'Login failed'
+        error.detail || 'Login failed'
       );
     }
   }

@@ -1,72 +1,131 @@
+# user_app/views/auth.py
 from rest_framework import generics, status
-from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.throttling import AnonRateThrottle
 from rest_framework_simplejwt.views import (
     TokenObtainPairView as BaseTokenObtainPairView,
     TokenRefreshView as BaseTokenRefreshView
 )
 from drf_spectacular.utils import extend_schema, OpenApiExample
-from user_app.serializers import RegisterSerializer, UserSerializer
+from django.contrib.auth import get_user_model
+from ..models import Profile
+from ..serializers import RegisterSerializer, UserSerializer
 
-@extend_schema(tags=['Authentication'])
+User = get_user_model()
+
+@extend_schema(
+    tags=["Authentication"],
+    summary="User Registration",
+    description="Creates a new user account with default 'buyer' role",
+    examples=[
+        OpenApiExample(
+            "Registration Request Example",
+            value={
+                "username": "newuser",
+                "email": "user@example.com",
+                "password": "ComplexPass123"
+            },
+            request_only=True
+        ),
+        OpenApiExample(
+            "Registration Response Example",
+            value={
+                "user": {
+                    "id": 1,
+                    "username": "newuser",
+                    "email": "user@example.com",
+                    "role": "buyer"
+                },
+                "message": "User registered successfully"
+            },
+            response_only=True
+        )
+    ]
+)
 class RegisterView(generics.CreateAPIView):
+    """
+    Public user registration endpoint.
+    Creates both User and Profile records in a single request.
+    """
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [AnonRateThrottle]
 
-    @extend_schema(
-        examples=[
-            OpenApiExample(
-                'Registration Example',
-                value={
-                    "username": "newuser",
-                    "password": "complexpassword123",
-                    "email": "user@example.com"
-                }
-            )
-        ]
-    )
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        return Response({
-            'user': UserSerializer(user).data,
-            'message': 'User registered successfully'
-        }, status=status.HTTP_201_CREATED)
+        return Response(
+            {
+                "user": UserSerializer(user).data,
+                "message": "User registered successfully"
+            },
+            status=status.HTTP_201_CREATED
+        )
 
-@extend_schema(tags=['Authentication'])
-class TokenObtainPairView(BaseTokenObtainPairView):
-    @extend_schema(
-        examples=[
-            OpenApiExample(
-                'Valid Example',
-                value={"username": "admin", "password": "pass123"},
-                description='Standard login'
-            )
-        ],
-        responses={
-            200: OpenApiExample(
-                'Success Response',
-                value={
-                    "refresh": "token.here",
-                    "access": "token.here",
-                    "user": {"username": "admin", "email": "admin@example.com"}
+@extend_schema(
+    tags=["Authentication"],
+    summary="JWT Token Pair",
+    description="Obtain access and refresh tokens for authentication",
+    examples=[
+        OpenApiExample(
+            "Login Request Example",
+            value={"username": "admin", "password": "admin123"},
+            request_only=True
+        ),
+        OpenApiExample(
+            "Login Response Example",
+            value={
+                "refresh": "xxxxx.yyyyy.zzzzz",
+                "access": "aaaaa.bbbbb.ccccc",
+                "user": {
+                    "username": "admin",
+                    "email": "admin@example.com",
+                    "role": "admin"
                 }
-            )
-        }
-    )
-    def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+            },
+            response_only=True
+        )
+    ]
+)
+class TokenObtainPairView(BaseTokenObtainPairView):
+    """
+    Custom JWT token endpoint that includes user details in the response.
+    """
 
-@extend_schema(tags=['Authentication'])
-class TokenRefreshView(BaseTokenRefreshView):
-    @extend_schema(
-        examples=[
-            OpenApiExample(
-                'Refresh Example',
-                value={"refresh": "your.refresh.token.here"}
-            )
-        ]
-    )
     def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+        response = super().post(request, *args, **kwargs)
+        if response.status_code == 200:
+            user = User.objects.select_related('profile').get(
+                username=request.data["username"]
+            )
+            response.data["user"] = {
+                "username": user.username,
+                "email": user.email,
+                "role": user.profile.role
+            }
+        return response
+
+@extend_schema(
+    tags=["Authentication"],
+    summary="JWT Token Refresh",
+    description="Refresh an expired access token using a valid refresh token",
+    examples=[
+        OpenApiExample(
+            "Refresh Request Example",
+            value={"refresh": "xxxxx.yyyyy.zzzzz"},
+            request_only=True
+        ),
+        OpenApiExample(
+            "Refresh Response Example",
+            value={"access": "aaaaa.bbbbb.ccccc"},
+            response_only=True
+        )
+    ]
+)
+class TokenRefreshView(BaseTokenRefreshView):
+    """
+    Standard JWT token refresh endpoint.
+    """
+    pass
