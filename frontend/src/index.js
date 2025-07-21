@@ -1,9 +1,7 @@
-// src/index.js
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { Provider } from 'react-redux';
-import store from './store'; // <- make sure this path points to your store file
 import App from './App';
+import { AuthProvider } from './contexts/AuthContext';
 import './assets/styles/global.scss';
 import './i18n';
 
@@ -12,8 +10,8 @@ const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
+    <AuthProvider>
       <App />
-    </Provider>
+    </AuthProvider>
   </React.StrictMode>
 );

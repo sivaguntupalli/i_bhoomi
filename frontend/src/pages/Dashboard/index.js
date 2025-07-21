@@ -1,3 +1,5 @@
+// src/pages/Dashboard/index.js
+
 import React from 'react';
 import Profile from './Profile';
 import Properties from './Properties';

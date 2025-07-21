@@ -1,6 +1,8 @@
+# 📄 File: user_app/models.py
+
 from django.contrib.auth.models import User
 from django.db import models
-from .constants import get_role_choices  # Changed import
+from .constants import get_role_choices  # ✅ Centralized roles now used here
 
 class Profile(models.Model):
     user = models.OneToOneField(
@@ -13,8 +15,8 @@ class Profile(models.Model):
     address = models.TextField(blank=True)
     role = models.CharField(
         max_length=20,
-        choices=get_role_choices(),  # Now using centralized roles
-        default='buyer'
+        choices=get_role_choices(),  # ✅ Role choices fetched dynamically
+        default='individual'  # ✅ Default role set to neutral 'individual'
     )
 
     class Meta:

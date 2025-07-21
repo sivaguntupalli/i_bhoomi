@@ -1,83 +1,87 @@
 // src/pages/Home.js
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import propertyApi from "../config/propertyApi"; // ✅ Replaces raw axios
+import propertyApi from "../services/property/propertyApi";
 import FeatureCard from "../components/common/FeatureCard";
 import "../assets/styles/components/_home.scss";
 
 const Home = () => {
   const { t } = useTranslation();
-
   const [filters, setFilters] = useState({
     propertyType: "",
     minPrice: "",
     maxPrice: "",
     location: ""
   });
-
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleFilterChange = (e) => {
-    setFilters({ ...filters, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
   useEffect(() => {
-    const fetchProperties = async () => {
+    const fetchFilteredProperties = async () => {
       setLoading(true);
       try {
-        const response = await propertyApi.get("/properties/", {
-          params: {
-            property_type: filters.propertyType,
-            min_price: filters.minPrice,
-            max_price: filters.maxPrice,
-            location: filters.location
-          }
+        const response = await propertyApi.getProperties({
+          property_type: filters.propertyType,
+          min_price: filters.minPrice,
+          max_price: filters.maxPrice,
+          location: filters.location
         });
-
-        if (Array.isArray(response.data)) {
-          setProperties(response.data);
+        if (Array.isArray(response)) {
+          setProperties(response);
         } else {
-          console.error("Unexpected response format:", response.data);
+          console.warn("Unexpected response format:", response);
         }
-      } catch (error) {
-        console.error("Error fetching properties:", error);
+      } catch (err) {
+        console.error("Failed to fetch properties", err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProperties();
+    fetchFilteredProperties();
   }, [filters]);
 
   const features = [
     {
       icon: "rupee-graph.webp",
-      title: t("home.feature1") || "Investment Insights",
-      description: t("home.feature1_desc") || "Analyze market trends before investing."
+      title: t("home.feature1", "Investment Insights"),
+      description: t("home.feature1_desc", "Analyze market trends before investing.")
     },
     {
       icon: "map-icon.webp",
-      title: t("home.feature2") || "Location Intelligence",
-      description: t("home.feature2_desc") || "Get detailed reports on preferred locations."
+      title: t("home.feature2", "Location Intelligence"),
+      description: t("home.feature2_desc", "Get detailed reports on preferred locations.")
     },
     {
       icon: "land-record.webp",
-      title: t("home.feature3") || "Legal Document Verification",
-      description: t("home.feature3_desc") || "Ensure property ownership is legitimate."
+      title: t("home.feature3", "Legal Document Verification"),
+      description: t("home.feature3_desc", "Ensure property ownership is legitimate.")
     }
   ];
+
+  const renderPropertyDescription = (property) => {
+    const base = `Location: ${property.address}, Price: ₹${property.price}`;
+    if (["flat", "apartment"].includes(property.property_type)) {
+      return `${base}, Bedrooms: ${property.bedrooms}, Bathrooms: ${property.bathrooms}`;
+    }
+    return base;
+  };
 
   return (
     <div className="home">
       {/* 🌟 Hero Section */}
       <section className="hero">
-        <h1>{t("home.hero_title") || "Find Your Perfect Property"}</h1>
+        <h1>{t("home.hero_title", "Find Your Perfect Property")}</h1>
         <p className="hero-subtitle">
-          {t("home.hero_subtitle") || "Browse verified listings today!"}
+          {t("home.hero_subtitle", "Browse verified listings today!")}
         </p>
         <button className="cta-button">
-          {t("home.cta_button") || "Explore Now"}
+          {t("home.cta_button", "Explore Now")}
         </button>
       </section>
 
@@ -118,11 +122,11 @@ const Home = () => {
 
       {/* 🚀 Features Section */}
       <section className="features-section">
-        <h2>{t("home.features_title") || "Our Services"}</h2>
+        <h2>{t("home.features_title", "Our Services")}</h2>
         <div className="features-grid">
-          {features.map(({ icon, title, description }, index) => (
+          {features.map(({ icon, title, description }, idx) => (
             <FeatureCard
-              key={`feature-${index}`}
+              key={idx}
               icon={
                 <img
                   src={`/assets/images/icons/${icon}`}
@@ -151,15 +155,7 @@ const Home = () => {
                 <FeatureCard
                   key={property.id}
                   title={property.title}
-                  description={
-                    property.property_type === "land" ||
-                    property.property_type === "plot"
-                      ? `Location: ${property.address}, Price: ₹${property.price}`
-                      : property.property_type === "flat" ||
-                        property.property_type === "apartment"
-                      ? `Location: ${property.address}, Price: ₹${property.price}, Bedrooms: ${property.bedrooms}, Bathrooms: ${property.bathrooms}`
-                      : `Location: ${property.address}, Price: ₹${property.price}`
-                  }
+                  description={renderPropertyDescription(property)}
                 />
               ))
             ) : (

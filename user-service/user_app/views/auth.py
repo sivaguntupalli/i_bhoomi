@@ -1,4 +1,5 @@
-# user_app/views/auth.py
+# 📄 File: user-service/user_app/views/auth.py
+
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -9,15 +10,14 @@ from rest_framework_simplejwt.views import (
 )
 from drf_spectacular.utils import extend_schema, OpenApiExample
 from django.contrib.auth import get_user_model
-from ..models import Profile
-from ..serializers import RegisterSerializer, UserSerializer
+from ..serializers import RegisterSerializer, UserSerializer, MyTokenObtainPairSerializer
 
 User = get_user_model()
 
 @extend_schema(
     tags=["Authentication"],
     summary="User Registration",
-    description="Creates a new user account with default 'buyer' role",
+    description="Creates a new user account with default 'individual' role",
     examples=[
         OpenApiExample(
             "Registration Request Example",
@@ -35,7 +35,7 @@ User = get_user_model()
                     "id": 1,
                     "username": "newuser",
                     "email": "user@example.com",
-                    "role": "buyer"
+                    "role": "individual"
                 },
                 "message": "User registered successfully"
             },
@@ -93,18 +93,21 @@ class TokenObtainPairView(BaseTokenObtainPairView):
     """
     Custom JWT token endpoint that includes user details in the response.
     """
-
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
         if response.status_code == 200:
-            user = User.objects.select_related('profile').get(
-                username=request.data["username"]
-            )
-            response.data["user"] = {
-                "username": user.username,
-                "email": user.email,
-                "role": user.profile.role
-            }
+            try:
+                user = User.objects.select_related('profile').get(
+                    username=request.data.get("username")
+                )
+                response.data["user"] = {
+                    "id": user.id,
+                    "username": user.username,
+                    "email": user.email,
+                    "role": user.profile.role
+                }
+            except User.DoesNotExist:
+                pass  # Edge case; shouldn't occur if credentials are valid
         return response
 
 @extend_schema(
@@ -124,6 +127,10 @@ class TokenObtainPairView(BaseTokenObtainPairView):
         )
     ]
 )
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
+
 class TokenRefreshView(BaseTokenRefreshView):
     """
     Standard JWT token refresh endpoint.

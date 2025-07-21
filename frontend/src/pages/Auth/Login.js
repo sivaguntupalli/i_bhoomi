@@ -1,14 +1,12 @@
 // src/pages/Auth/Login.js
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../../store/authSlice';
+import { useAuth } from '../../contexts/AuthContext'; // ✅ Using AuthContext
 import AuthForm from './AuthForm';
 
 const Login = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, status, error } = useSelector((state) => state.auth);
+  const { login, user, error, loading } = useAuth(); // ✅ From context
   const [formData, setFormData] = useState({ username: '', password: '' });
   const [formErrors, setFormErrors] = useState({});
 
@@ -27,8 +25,8 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-    const result = await dispatch(loginUser(formData));
-    if (loginUser.fulfilled.match(result)) {
+    const success = await login(formData.username, formData.password);
+    if (success) {
       navigate('/dashboard', { replace: true });
     }
   };
@@ -55,8 +53,8 @@ const Login = () => {
         onChange={handleChange}
       />
       {formErrors.password && <span className="error-message">{formErrors.password}</span>}
-      <button type="submit" disabled={status === 'loading'}>
-        {status === 'loading' ? 'Logging in...' : 'Login'}
+      <button type="submit" disabled={loading}>
+        {loading ? 'Logging in...' : 'Login'}
       </button>
     </AuthForm>
   );

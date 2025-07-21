@@ -1,17 +1,14 @@
-// frontend/src/components/layout/Header.js
-
+// src/components/layout/Header.js
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { logoutUser } from "../../store/authSlice";
+import { useAuth } from "../../contexts/AuthContext"; // ✅ Using AuthContext
 import "./layout.scss";
 
 function Header() {
-  const { user } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { user, logout } = useAuth(); // ✅ From context
 
   const handleLogout = () => {
-    dispatch(logoutUser());
+    logout();
     navigate("/login");
   };
 
@@ -24,7 +21,6 @@ function Header() {
           <>
             <Link to="/dashboard">Dashboard</Link>
             <Link to="/profile">Profile</Link>
-            {/* Styled like a link */}
             <button className="nav-link-button" onClick={handleLogout}>
               Logout
             </button>

@@ -1,3 +1,5 @@
+# 📄 File: user_app/constants.py
+
 ROLES = {
     'ADMIN': {
         'name': 'admin',
@@ -14,15 +16,11 @@ ROLES = {
         'permissions': ['manage_tickets'],
         'display': 'Support Agent'
     },
-    'BUYER': {
-        'name': 'buyer',
-        'permissions': ['place_orders'],
-        'display': 'Buyer'
-    },
-    'SELLER': {
-        'name': 'seller',
-        'permissions': ['manage_products'],
-        'display': 'Seller'
+    # 🔁 Replaced buyer and seller roles with 'individual'
+    'INDIVIDUAL': {
+        'name': 'individual',
+        'permissions': ['place_orders', 'manage_products'],
+        'display': 'Individual'
     }
 }
 
@@ -31,5 +29,5 @@ def get_role_choices():
     return [(role['name'], role['display']) for role in ROLES.values()]
 
 def get_permissions(role_name):
-    return next((role['permissions'] for role in ROLES.values() 
+    return next((role['permissions'] for role in ROLES.values()
                if role['name'] == role_name), [])

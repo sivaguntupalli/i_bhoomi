@@ -1,11 +1,13 @@
-// frontend/src/pages/Dashboard/Profile.js
+// src/pages/Dashboard/Profile.js
 
 import React, { useEffect, useState } from 'react';
-import userApi from '../../api/userApi';
-import { useSelector } from 'react-redux';
+import userApi from '../../services/user/userApi';
+import { useAuth } from '../../contexts/AuthContext';
+import { handleApiError } from '../../utils/errorHandler'; // ✅ NEW
 
 const Profile = () => {
-  const { user } = useSelector(state => state.auth);
+  const { user } = useAuth();
+
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -13,6 +15,7 @@ const Profile = () => {
     phone: '',
     address: '',
   });
+
   const [status, setStatus] = useState('idle');
   const [message, setMessage] = useState('');
 
@@ -21,6 +24,7 @@ const Profile = () => {
       try {
         const userRes = await userApi.get(`/api/users/${user.user_id}/`);
         const profileRes = await userApi.get(`/api/profiles/${user.user_id}/`);
+
         setFormData({
           username: userRes.data.username,
           email: userRes.data.email,
@@ -29,8 +33,8 @@ const Profile = () => {
           address: profileRes.data.address || '',
         });
       } catch (err) {
-        console.error('Error fetching profile:', err);
-        setMessage('Failed to load profile.');
+        const error = handleApiError(err, { fallback: 'Failed to load profile' });
+        setMessage(error.message);
       }
     };
 
@@ -45,15 +49,18 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('loading');
+
     try {
       await userApi.put(`/api/profiles/${user.user_id}/`, {
         phone: formData.phone,
         address: formData.address,
       });
+
       setMessage('Profile updated successfully.');
       setStatus('succeeded');
     } catch (err) {
-      setMessage('Failed to update profile.');
+      const error = handleApiError(err, { fallback: 'Failed to update profile' });
+      setMessage(error.message);
       setStatus('failed');
     }
   };

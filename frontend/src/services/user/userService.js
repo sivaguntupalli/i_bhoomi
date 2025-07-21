@@ -1,5 +1,5 @@
 // src/services/userService.js
-import userApi from '../../api/userApi';
+import userApi from './userApi'; 
 
 export const getUsers = (params = {}) => userApi.get('/users/', { params });
 
