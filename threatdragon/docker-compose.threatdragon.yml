@@ -1,0 +1,21 @@
+# Create the correct HTTPS configuration
+version: "3.9"
+services:
+  threatdragon:
+    image: owasp/threat-dragon:stable
+    container_name: threatdragon
+    ports:
+      - "3443:3000"  # External HTTPS port 3443 -> Internal port 3000
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - ENCRYPTION_KEYS=0d7f8d772cff2fd3b3b0e52e9a9c8149427b0cdc8d468e0d1836e006c206f029
+      - ENCRYPTION_JWT_SIGNING_KEY=4cb9d54da081cc86ccf48fe5118ef29e
+      - ENCRYPTION_JWT_REFRESH_SIGNING_KEY=811787864bce289e38f9d96cb6e4c03a
+      - HOST=0.0.0.0
+      - SERVER_PROTOCOL=https
+      - SSL_KEY_PATH=/app/ssl/server.key
+      - SSL_CERT_PATH=/app/ssl/server.crt
+    volumes:
+      - ./threatdragon-data:/app/data
+      - ./ssl:/app/ssl' > docker-compose.threatdragon.yml

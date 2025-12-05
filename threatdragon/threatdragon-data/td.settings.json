@@ -1,0 +1,12 @@
+{
+  "trustProxy": false,
+  "forceHttps": false,
+  "port": 3000,
+  "encryptionKeys": [
+    "fb88552ca03fd8952b97a047b5fab9a675ad645fda092aba9ad283697763d774"
+  ],
+  "jwt": {
+    "signingKey": "a4f32c89d92e7f14c3d5a61b9f83e25c",
+    "refreshSigningKey": "c8e4f12a79d5b63c1a4e8d92f07b2e3d"
+  }
+}
